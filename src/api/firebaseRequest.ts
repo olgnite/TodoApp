@@ -17,7 +17,7 @@ export const createTodo = async (todo: ITodo) => {
         year: todo.year,
         time: todo.time,
         file: todo.file,
-        completed: false
+        completed:  todo.completed
     })
 }
 
@@ -60,6 +60,7 @@ export const updateTodo = async (todo: ITodo) => {
         year: todo.year,
         time: todo.time,
         file: todo.file,
+        completed: todo.completed,
         id: todo.id,
     })
 }

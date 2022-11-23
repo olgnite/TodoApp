@@ -18,8 +18,8 @@ interface IPropTodo {
  * @returns {tsx}
  */
 const TodoEdit: FC<IPropTodo> = ({ todo }) => {
+    let dateState = setDate(todo.year, todo.month, todo.day, todo.time);
     const [completedDate, setCompletedDate] = useState(true);
-    const dateState = setDate(todo.year, todo.month, todo.day, todo.time);
     const [selectedFile, setSelectedFile] = useState<string[]>([]);
     const [showTodo, setShowTodo] = useContext(contextTodo);
     const { register, handleSubmit, setValue } = useForm<ITodo>();
@@ -44,10 +44,11 @@ const TodoEdit: FC<IPropTodo> = ({ todo }) => {
         month,
         year,
         time,
-        file,
         id,
     }) => {
-        completedByDateHandler()
+        currentDate > dateState ? setCompletedDate(true) : setCompletedDate(false)
+        console.log(currentDate, 'Текущие');
+        console.log(dateState, 'Set');
         setShowTodo(true)
         updateTodo({
             title,
@@ -56,6 +57,7 @@ const TodoEdit: FC<IPropTodo> = ({ todo }) => {
             month,
             year,
             time,
+            completed: completedDate,
             file: selectedFile,
             id
         })
@@ -68,7 +70,7 @@ const TodoEdit: FC<IPropTodo> = ({ todo }) => {
      * Добавляем имена всех файлов в новый массив и state
      * @param {*} e
      */
-    const handleChangeAddFile = (e: any) => { 
+    const handleChangeAddFile = (e: any) => {
         e.preventDefault();
 
         if (e.target.files) {
@@ -78,16 +80,6 @@ const TodoEdit: FC<IPropTodo> = ({ todo }) => {
                 setSelectedFile(pendingFiles);
             }
         }
-    }
-
-    const completedByDateHandler = () => {
-        currentDate > dateState
-            ? setCompletedDate(true)
-            : setCompletedDate(false)
-        completedTodoDate({
-            ...todo,
-            completed: completedDate
-        })
     }
 
     return (

@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 
-export const currentDate = dayjs().toDate().getTime();
+export let currentDate = dayjs().toDate().getTime();
 
 /**
  * Функция устанавливает и возвращает время в миллисекундах

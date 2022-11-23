@@ -26,7 +26,8 @@ const TodoForm: FC = () => {
     const createTodoHandler: SubmitHandler<ITodo> = (data: ITodo) => {
         createTodo({
             ...data,
-            file: selectedFile
+            file: selectedFile,
+            completed: false
         });
         setSelectedFile([])
         reset();
