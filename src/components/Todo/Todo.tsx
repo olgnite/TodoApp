@@ -1,9 +1,8 @@
 import dayjs from 'dayjs'
-import { FC, useContext, useEffect } from 'react'
+import { FC, useContext } from 'react'
 import { currentDate, setDate } from '../../api/day'
 import { completedTodo, completedTodoDate, deleteTodo } from '../../api/firebaseRequest'
 import contextTodo from '../../Context/TodoContext'
-import { useRequestTodo } from '../../hooks/requestTodo'
 import { ITodo } from '../../types/todo.interface'
 import styles from './Todo.module.scss'
 
@@ -44,7 +43,7 @@ const Todo: FC<IPropTodo> = ({ todo }: IPropTodo) => {
     }
 
     /**
-     * Функция удаляет задачу по нажатию кнопки "Удалить"
+     * Функция удаляет задачу по нажатию на кнопку "Удалить"
      */
     const deleteHandler = () => {
         deleteTodo(todo.id);
@@ -71,8 +70,8 @@ const Todo: FC<IPropTodo> = ({ todo }: IPropTodo) => {
                     {todo.completed === false && <input type="checkbox" onClick={completeByCheckboxHandler} />}
                     <div style={{ marginLeft: "-20px", marginTop: "10px" }}>
                         {todo.completed
-                            ? <label htmlFor="checkbox">Выполнено</label>
-                            : <label htmlFor="checkbox">Невыполнено</label>}
+                            ? <label htmlFor="checkbox">Выполнено/Время выполнения истекло</label>
+                            : <label htmlFor="checkbox">Не выполнено</label>}
                     </div>
                 </>
             </div>}

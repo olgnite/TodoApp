@@ -55,6 +55,10 @@ export const updateTodo = async (todo: ITodo) => {
     await updateDoc(doc(db, 'todos', todo.id), {
         title: todo.title,
         description: todo.description,
+        day: todo.day,
+        month: todo.month,
+        year: todo.year,
+        time: todo.time,
         file: todo.file,
         id: todo.id,
     })

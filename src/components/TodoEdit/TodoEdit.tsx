@@ -1,6 +1,8 @@
 import { FC, useContext, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { updateTodo } from '../../api/firebaseRequest';
+import { currentDate, setDate } from '../../api/day';
+import { completedTodoDate, updateTodo } from '../../api/firebaseRequest';
+import { days, months, years } from '../../base';
 import contextTodo from '../../Context/TodoContext';
 import { ITodo } from '../../types/todo.interface';
 import styles from './TodoEdit.module.scss';
@@ -16,6 +18,8 @@ interface IPropTodo {
  * @returns {tsx}
  */
 const TodoEdit: FC<IPropTodo> = ({ todo }) => {
+    const [completedDate, setCompletedDate] = useState(true);
+    const dateState = setDate(todo.year, todo.month, todo.day, todo.time);
     const [selectedFile, setSelectedFile] = useState<string[]>([]);
     const [showTodo, setShowTodo] = useContext(contextTodo);
     const { register, handleSubmit, setValue } = useForm<ITodo>();
@@ -36,13 +40,22 @@ const TodoEdit: FC<IPropTodo> = ({ todo }) => {
     const editHandler: SubmitHandler<ITodo> = ({
         title,
         description,
+        day,
+        month,
+        year,
+        time,
         file,
         id,
     }) => {
+        completedByDateHandler()
         setShowTodo(true)
         updateTodo({
             title,
             description,
+            day,
+            month,
+            year,
+            time,
             file: selectedFile,
             id
         })
@@ -55,7 +68,7 @@ const TodoEdit: FC<IPropTodo> = ({ todo }) => {
      * Добавляем имена всех файлов в новый массив и state
      * @param {*} e
      */
-    const handleChangeAddFile = (e: any) => {
+    const handleChangeAddFile = (e: any) => { 
         e.preventDefault();
 
         if (e.target.files) {
@@ -65,6 +78,16 @@ const TodoEdit: FC<IPropTodo> = ({ todo }) => {
                 setSelectedFile(pendingFiles);
             }
         }
+    }
+
+    const completedByDateHandler = () => {
+        currentDate > dateState
+            ? setCompletedDate(true)
+            : setCompletedDate(false)
+        completedTodoDate({
+            ...todo,
+            completed: completedDate
+        })
     }
 
     return (
@@ -92,6 +115,22 @@ const TodoEdit: FC<IPropTodo> = ({ todo }) => {
                                 type="file"
                                 multiple
                                 onChange={(e) => handleChangeAddFile(e)} />
+                        </div>
+                        <div>
+                            <label htmlFor="dateCompleted">Дата завершения</label>
+                            <select {...register('day')}>
+                                {days.map((d) => <option key={'__id__' + d} value={d}>{d}</option>)}
+                            </select>
+                            <select {...register('month')}>
+                                {months.map((m, i) => <option key={'__id__' + m} value={i + 1}>{m}</option>)}
+                            </select>
+                            <select {...register('year')}>
+                                {years.map((y) => <option key={'__id__' + y} value={y}>{y}</option>)}
+                            </select>
+                            <div className={styles.time}>
+                                <label htmlFor="time">Формат - 11:00</label>
+                                <input type="text" placeholder='Время завершения' {...register('time')} />
+                            </div>
                         </div>
                     </div>
                     <button
