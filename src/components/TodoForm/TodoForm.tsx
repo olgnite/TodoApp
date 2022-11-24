@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { createTodo } from '../../api/firebaseRequest';
 import { days, months, years } from '../../base';
@@ -44,7 +44,7 @@ const TodoForm: FC = () => {
         e.preventDefault();
 
         if (e.target.files) {
-            let pendingFiles: string[] = [...selectedFile];
+            let pendingFiles: string[] = selectedFile;
             for (let i = 0; i < e.target.files.length; i++) {
                 pendingFiles.push(e.target.files[i].name);
                 setSelectedFile(pendingFiles);
@@ -81,7 +81,7 @@ const TodoForm: FC = () => {
                             </div>
                             <div>
                                 <input type="file"
-                                    multiple onChange={(e) => handleChangeAddFile(e)}
+                                    multiple onChange={handleChangeAddFile}
                                     className={styles.btnFile} />
                                 {selectedFile.map((f) => (<p key={'__id__' + f}>{f}</p>))}
                             </div>

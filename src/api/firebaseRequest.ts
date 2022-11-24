@@ -66,7 +66,7 @@ export const updateTodo = async (todo: ITodo) => {
 }
 
 /**
- * Функция удаляет todo из state firebase
+ * Функция удаляет todo из state firebase по id элемента
  * @async
  * @param {string} id
  * @returns {*}

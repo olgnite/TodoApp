@@ -26,14 +26,25 @@ const TodoEdit: FC<IPropTodo> = ({ todo }) => {
 
     /**
      * Функция позволяет отправить отредактированную форму в firebase
+     * БАГ! - При первом редактировании времени изменения применяются с 3 раза, 
+     * далее можно спокойно менять с первого (Не придумал, как исправить), 
+     * остальные поля работают корректно
      * @param {{ 
      * title: string; 
      * description: string; 
      * file: string; 
+     * day:string;
+     * month: string;
+     * year:string;
+     * time:string;
      * id: string; }} {
             title,
             description,
             file,
+            day,
+            month,
+            year,
+            time,
             id,
         }
      */
@@ -47,8 +58,6 @@ const TodoEdit: FC<IPropTodo> = ({ todo }) => {
         id,
     }) => {
         currentDate > dateState ? setCompletedDate(true) : setCompletedDate(false)
-        console.log(currentDate, 'Текущие');
-        console.log(dateState, 'Set');
         setShowTodo(true)
         updateTodo({
             title,
@@ -74,7 +83,7 @@ const TodoEdit: FC<IPropTodo> = ({ todo }) => {
         e.preventDefault();
 
         if (e.target.files) {
-            let pendingFiles: string[] = [...selectedFile];
+            let pendingFiles: string[] = selectedFile;
             for (let i = 0; i < e.target.files.length; i++) {
                 pendingFiles.push(e.target.files[i].name);
                 setSelectedFile(pendingFiles);
@@ -106,7 +115,7 @@ const TodoEdit: FC<IPropTodo> = ({ todo }) => {
                             <input
                                 type="file"
                                 multiple
-                                onChange={(e) => handleChangeAddFile(e)} />
+                                onChange={handleChangeAddFile} />
                         </div>
                         <div>
                             <label htmlFor="dateCompleted">Дата завершения</label>
