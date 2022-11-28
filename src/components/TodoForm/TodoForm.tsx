@@ -1,10 +1,10 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { createTodo } from '../../api/firebaseRequest';
-import { days, months, years } from '../../base';
 import { useRequestTodo } from '../../hooks/requestTodo';
 import { ITodo } from '../../types/todo.interface';
 import TodoItem from '../TodoItem';
+import TodoSelect from '../TodoSelect/TodoSelect';
 import styles from './TodoForm.module.scss';
 
 /**
@@ -45,10 +45,10 @@ const TodoForm: FC = () => {
 
         if (e.target.files) {
             let pendingFiles: string[] = selectedFile;
-            for (let i = 0; i < e.target.files.length; i++) {
+            [...e.target.files].forEach((_: any, i: number) => {
                 pendingFiles.push(e.target.files[i].name);
                 setSelectedFile(pendingFiles);
-            }
+            });
         }
     }
 
@@ -59,29 +59,25 @@ const TodoForm: FC = () => {
                 <form onSubmit={handleSubmit(createTodoHandler)}>
                     <div style={{ marginBottom: '10px' }}>
                         <div className={styles.title}>
-                            <input type="text" placeholder='Название задачи' {...register('title', { required: true })} />
+                            <input
+                                type="text"
+                                placeholder='Название задачи'
+                                {...register('title', { required: true })}
+                            />
                         </div>
                         <div className={styles.description}>
-                            <input type="text" placeholder='Описание задачи' {...register('description', { required: true })} />
+                            <input
+                                type="text"
+                                placeholder='Описание задачи'
+                                {...register('description', { required: true })}
+                            />
                         </div>
-                        <div className={styles.date}>
-                            <label htmlFor="dateCompleted">Дата завершения</label>
-                            <select {...register('day')}>
-                                {days.map((d) => <option key={'__id__' + d} value={d}>{d}</option>)}
-                            </select>
-                            <select {...register('month')}>
-                                {months.map((m, i) => <option key={'__id__' + m} value={i + 1}>{m}</option>)}
-                            </select>
-                            <select {...register('year')}>
-                                {years.map((y) => <option key={'__id__' + y} value={y}>{y}</option>)}
-                            </select>
-                            <div className={styles.time}>
-                                <label htmlFor="time">Формат - 11:00</label>
-                                <input type="text" placeholder='Время завершения' {...register('time')} />
-                            </div>
+                        <div>
+                            <TodoSelect />
                             <div>
                                 <input type="file"
-                                    multiple onChange={handleChangeAddFile}
+                                    multiple
+                                    onChange={handleChangeAddFile}
                                     className={styles.btnFile} />
                                 {selectedFile.map((f) => (<p key={'__id__' + f}>{f}</p>))}
                             </div>
@@ -92,7 +88,7 @@ const TodoForm: FC = () => {
                     </button>
                 </form>
                 <div className='content'>
-                    {todos.map((t) => (<TodoItem key={t.id} todo={t}></TodoItem>))}
+                    {todos.map((t) => (<TodoItem key={t.id} todo={t}/>))}
                 </div>
             </div>
         </>
