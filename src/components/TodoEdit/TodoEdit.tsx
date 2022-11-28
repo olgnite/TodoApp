@@ -2,9 +2,9 @@ import { FC, useContext, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { currentDate, setDate } from '../../api/day';
 import { updateTodo } from '../../api/firebaseRequest';
+import { days, months, years } from '../../base';
 import contextTodo from '../../Context/TodoContext';
 import { ITodo } from '../../types/todo.interface';
-import TodoSelect from '../TodoSelect/TodoSelect';
 import styles from './TodoEdit.module.scss';
 
 interface IPropTodo {
@@ -117,7 +117,26 @@ const TodoEdit: FC<IPropTodo> = ({ todo }) => {
                                 multiple
                                 onChange={handleChangeAddFile} />
                         </div>
-                        <TodoSelect></TodoSelect>
+                        <div className='date'>
+                            <label htmlFor="dateCompleted">Дата завершения</label>
+                            <select {...register('day')}>
+                                {days.map((d) => <option key={'__id__' + d} value={d}>{d}</option>)}
+                            </select>
+                            <select {...register('month')}>
+                                {months.map((m, i) => <option key={'__id__' + m} value={i + 1}>{m}</option>)}
+                            </select>
+                            <select {...register('year')}>
+                                {years.map((y) => <option key={'__id__' + y} value={y}>{y}</option>)}
+                            </select>
+                            <div className={styles.time}>
+                                <label htmlFor="time">Формат - 11:00</label>
+                                <input
+                                    type="text"
+                                    placeholder='Время завершения'
+                                    {...register('time')}
+                                />
+                            </div>
+                        </div>
                     </div>
                     <button
                         onClick={() => { setValue("id", todo.id) }}

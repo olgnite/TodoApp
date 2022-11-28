@@ -1,12 +1,11 @@
 export interface ITodo {
     title: string
     description: string
-    year?: string
-    month?: string
     day?: string
+    month?: string
+    year?: string
     time?: string
     file?: string[]
     completed?: boolean
     id: string
 }
-

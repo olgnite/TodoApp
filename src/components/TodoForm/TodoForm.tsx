@@ -1,10 +1,10 @@
 import { FC, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { createTodo } from '../../api/firebaseRequest';
+import { days, months, years } from '../../base';
 import { useRequestTodo } from '../../hooks/requestTodo';
 import { ITodo } from '../../types/todo.interface';
 import TodoItem from '../TodoItem';
-import TodoSelect from '../TodoSelect/TodoSelect';
 import styles from './TodoForm.module.scss';
 
 /**
@@ -31,6 +31,7 @@ const TodoForm: FC = () => {
         });
         setSelectedFile([])
         reset();
+        console.log(data);
     }
 
     /**
@@ -73,7 +74,26 @@ const TodoForm: FC = () => {
                             />
                         </div>
                         <div>
-                            <TodoSelect />
+                            <div className={styles.date}>
+                                <label htmlFor="dateCompleted">Дата завершения</label>
+                                <select {...register('day')}>
+                                    {days.map((d) => <option key={'__id__' + d} value={d}>{d}</option>)}
+                                </select>
+                                <select {...register('month')}>
+                                    {months.map((m, i) => <option key={'__id__' + m} value={i + 1}>{m}</option>)}
+                                </select>
+                                <select {...register('year')}>
+                                    {years.map((y) => <option key={'__id__' + y} value={y}>{y}</option>)}
+                                </select>
+                                <div className={styles.time}>
+                                    <label htmlFor="time">Формат - 11:00</label>
+                                    <input
+                                        type="text"
+                                        placeholder='Время завершения'
+                                        {...register('time')}
+                                    />
+                                </div>
+                            </div>
                             <div>
                                 <input type="file"
                                     multiple
@@ -88,7 +108,7 @@ const TodoForm: FC = () => {
                     </button>
                 </form>
                 <div className='content'>
-                    {todos.map((t) => (<TodoItem key={t.id} todo={t}/>))}
+                    {todos.map((t) => (<TodoItem key={t.id} todo={t} />))}
                 </div>
             </div>
         </>
