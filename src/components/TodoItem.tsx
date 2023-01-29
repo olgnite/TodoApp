@@ -27,3 +27,4 @@ const TodoItem: FC<IPropTodo> = ({ todo }) => {
 }
 
 export default TodoItem
+
