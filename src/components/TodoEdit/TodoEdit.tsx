@@ -2,9 +2,10 @@ import { FC, useContext, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { currentDate, setDate } from '../../api/day';
 import { updateTodo } from '../../api/firebaseRequest';
-import { days, months, years } from '../../base';
 import contextTodo from '../../Context/TodoContext';
+import { AddFileService } from '../../services/addFile.service';
 import { ITodo } from '../../types/todo.interface';
+import DateSelect from '../DateSelect/DateSelect';
 import styles from './TodoEdit.module.scss';
 
 interface IPropTodo {
@@ -80,15 +81,7 @@ const TodoEdit: FC<IPropTodo> = ({ todo }) => {
      * @param {*} e
      */
     const handleChangeAddFile = (e: any) => {
-        e.preventDefault();
-
-        if (e.target.files) {
-            let pendingFiles: string[] = selectedFile;
-            [...e.target.files].forEach((_: any, i: number) => {
-                pendingFiles.push(e.target.files[i].name);
-                setSelectedFile(pendingFiles);
-            });
-        }
+        setSelectedFile(AddFileService.addFile(e));
     }
 
     return (
@@ -118,24 +111,7 @@ const TodoEdit: FC<IPropTodo> = ({ todo }) => {
                                 onChange={handleChangeAddFile} />
                         </div>
                         <div className='date'>
-                            <label htmlFor="dateCompleted">Дата завершения</label>
-                            <select {...register('day')}>
-                                {days.map((d) => <option key={'__id__' + d} value={d}>{d}</option>)}
-                            </select>
-                            <select {...register('month')}>
-                                {months.map((m, i) => <option key={'__id__' + m} value={i + 1}>{m}</option>)}
-                            </select>
-                            <select {...register('year')}>
-                                {years.map((y) => <option key={'__id__' + y} value={y}>{y}</option>)}
-                            </select>
-                            <div className={styles.time}>
-                                <label htmlFor="time">Формат - 11:00</label>
-                                <input
-                                    type="text"
-                                    placeholder='Время завершения'
-                                    {...register('time')}
-                                />
-                            </div>
+                            <DateSelect register={register} />
                         </div>
                     </div>
                     <button

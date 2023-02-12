@@ -1,9 +1,10 @@
 import { FC, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { createTodo } from '../../api/firebaseRequest';
-import { days, months, years } from '../../base';
 import { useRequestTodo } from '../../hooks/requestTodo';
+import { AddFileService } from '../../services/addFile.service';
 import { ITodo } from '../../types/todo.interface';
+import DateSelect from '../DateSelect/DateSelect';
 import TodoItem from '../TodoItem';
 import styles from './TodoForm.module.scss';
 
@@ -14,7 +15,7 @@ import styles from './TodoForm.module.scss';
  * @returns {tsx}
  */
 const TodoForm: FC = () => {
-    const { register, handleSubmit, reset } = useForm<ITodo>()
+    const { register, handleSubmit, reset } = useForm<ITodo>();
     const [selectedFile, setSelectedFile] = useState<string[]>([]);
     const todos = useRequestTodo();
 
@@ -29,10 +30,9 @@ const TodoForm: FC = () => {
             file: selectedFile,
             completed: false
         });
-        setSelectedFile([])
+        setSelectedFile([]);
         reset();
-        console.log(data);
-    }
+    };
 
     /**
      *  Функция добавляет выбранные файлы в state (selectedFile)
@@ -42,16 +42,8 @@ const TodoForm: FC = () => {
      * @param {*} e
      */
     const handleChangeAddFile = (e: any) => {
-        e.preventDefault();
-
-        if (e.target.files) {
-            let pendingFiles: string[] = selectedFile;
-            [...e.target.files].forEach((_: any, i: number) => {
-                pendingFiles.push(e.target.files[i].name);
-                setSelectedFile(pendingFiles);
-            });
-        }
-    }
+        setSelectedFile(AddFileService.addFileHandler(e));
+    };
 
     return (
         <>
@@ -75,24 +67,7 @@ const TodoForm: FC = () => {
                         </div>
                         <div>
                             <div className={styles.date}>
-                                <label htmlFor="dateCompleted">Дата завершения</label>
-                                <select {...register('day')}>
-                                    {days.map((d) => <option key={'__id__' + d} value={d}>{d}</option>)}
-                                </select>
-                                <select {...register('month')}>
-                                    {months.map((m, i) => <option key={'__id__' + m} value={i + 1}>{m}</option>)}
-                                </select>
-                                <select {...register('year')}>
-                                    {years.map((y) => <option key={'__id__' + y} value={y}>{y}</option>)}
-                                </select>
-                                <div className={styles.time}>
-                                    <label htmlFor="time">Формат - 11:00</label>
-                                    <input
-                                        type="text"
-                                        placeholder='Время завершения'
-                                        {...register('time')}
-                                    />
-                                </div>
+                                <DateSelect register={register} />
                             </div>
                             <div>
                                 <input type="file"

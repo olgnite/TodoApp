@@ -1,0 +1,17 @@
+.time {
+	margin-left: auto;
+	margin-right: auto;
+	padding: 10px;
+	margin-right: 115px;
+
+	> label {
+		margin-right: 10px;
+	}
+	> input {
+		border-color: blueviolet;
+		box-sizing: border-box;
+		font-family: inherit;
+		font-size: inherit;
+		line-height: inherit;
+	}
+}
